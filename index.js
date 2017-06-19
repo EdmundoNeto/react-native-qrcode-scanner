@@ -99,8 +99,8 @@ export default class QRCodeScanner extends Component {
   _renderCameraMarker() {
     if (this.props.showMarker) {
       return (
-      <View style={styles.rectangleContainer}>
-        <View style={styles.rectangle}/>
+      <View style={[styles.rectangleContainer, this.props.rectangleContainerStyle]}>
+        <View style={[styles.rectangle, this.props.rectangleStyle]}/>
       </View>
       )
     }
@@ -122,7 +122,7 @@ export default class QRCodeScanner extends Component {
       )
     }
     return (
-      <Camera style={styles.camera} onBarCodeRead={this._handleBarCodeRead.bind(this)}>
+      <Camera style={[styles.camera, this.props.cameraStyle]} onBarCodeRead={this._handleBarCodeRead.bind(this)}>
         {this._renderCameraMarker()}
       </Camera>
     )
