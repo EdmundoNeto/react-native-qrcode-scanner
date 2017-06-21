@@ -48,7 +48,7 @@ export default class QRCodeScanner extends Component {
       scanning: false,
       fadeInOpacity: new Animated.Value(0)
     }
-
+    this.timeout = null
     this._handleBarCodeRead = this._handleBarCodeRead.bind(this);
   }
 
@@ -67,6 +67,10 @@ export default class QRCodeScanner extends Component {
     }
    }
 
+  componentWillUnmount() {
+    clearTimeout(this.timeout)
+  }
+
   _setScanning(value) {
     this.setState({ scanning: value });
   }
@@ -77,7 +81,7 @@ export default class QRCodeScanner extends Component {
       this._setScanning(true);
       this.props.onRead(e)
       if (this.props.reactivate) {
-        setTimeout(() => (this._setScanning(false)), this.props.reactivateTimeout);
+        this.timeout = setTimeout(() => (this._setScanning(false)), this.props.reactivateTimeout);
       }
     }
   }
