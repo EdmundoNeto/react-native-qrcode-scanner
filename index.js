@@ -7,7 +7,9 @@ import {
   Vibration,
   Animated,
   Easing,
-  View
+  View,
+  Platform,
+  Text
 } from 'react-native';
 
 import Camera from 'react-native-camera'
@@ -32,14 +34,19 @@ export default class QRCodeScanner extends Component {
       PropTypes.element,
       PropTypes.string,
     ]),
+    overlayBackgroundColor: PropTypes.string,
+    labelText: PropTypes.string
   }
 
   static defaultProps = {
+    overlayBackgroundColor: "#333333",
     onRead: () => (console.log('QR code scanned!')),
     reactivate: false,
     reactivateTimeout: 0,
     fadeIn: true,
     showMarker: false,
+    showOverlay: false,
+    labelText: "LEIA O QR CODE"
   }
 
   constructor(props) {
@@ -132,6 +139,19 @@ export default class QRCodeScanner extends Component {
     )
   }
 
+_renderOverlay() {
+  if (this.props.showOverlay) {
+    return (
+    <View style={styles.overlayContainer}>
+      <View style={[styles.overlayTop, {backgroundColor: this.props.overlayBackgroundColor}]}>
+        <Text style={styles.label}>{this.props.labelText}</Text>
+      </View>
+      <View style={[styles.overlayBottom, {backgroundColor: this.props.overlayBackgroundColor}]}/>
+    </View>
+    )
+  }
+  return null
+}
 
   render() {
     return (
@@ -140,9 +160,11 @@ export default class QRCodeScanner extends Component {
           {this._renderTopContent()}
         </View>
         {this._renderCamera()}
+        {this._renderOverlay()}
         <View style={[styles.infoView, this.props.bottomViewStyle]}>
           {this._renderBottomContent()}
         </View>
+        {this._renderOverlay()}
       </View>
     )
   }
@@ -182,4 +204,33 @@ const styles = StyleSheet.create({
     borderColor: '#00FF00',
     backgroundColor: 'transparent',
   },
+  overlayContainer: {
+    flex: 1,
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    bottom: 0,
+    top: 0,
+ },
+ overlayBottom: {
+   position: 'absolute',
+   height: 80,
+   left: 0,
+   right: 0,
+   bottom: 0,
+ },
+ overlayTop: {
+   position: 'absolute',
+   height: 80,
+   left: 0,
+   right: 0,
+   top: 0,
+   justifyContent: 'center',
+   alignItems: 'center'
+ },
+label: {
+  backgroundColor:'transparent',
+  color:'white',
+  textAlign: 'center'
+}
 })
